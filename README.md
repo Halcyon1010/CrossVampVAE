@@ -1,7 +1,3 @@
-这是一个基于你提供的代码文件生成的 `README.md` 文件。它详细介绍了 **CrossVampVAE** 项目的架构、功能、安装步骤以及如何运行训练和评估脚本。
-
----
-
 # CrossVampVAE: 基于双向交叉注意力流与 VampPrior 的变分自编码器
 
 **CrossVampVAE** 是一个针对图像生成任务（主要是 CIFAR-10）的高级变分自编码器（VAE）实现。本项目结合了 **VampPrior** (Variational Mixture of Posteriors Prior) 和 **基于双向交叉注意力的归一化流 (Bi-directional Cross-Attention Normalizing Flow)**，旨在提高 VAE 的后验近似能力，缓解后验坍塌问题，并生成高质量的图像。
