@@ -48,7 +48,7 @@ def get_args():
     
     # FID 配置
     parser.add_argument("--fid_every", type=int, default=10, help="每多少 Epoch 测一次 FID")
-    parser.add_argument("--fid_samples", type=int, default=50000, help="测试 FID 时生成的样本数")
+    parser.add_argument("--fid_samples", type=int, default=2000, help="测试 FID 时生成的样本数")
     
     return parser.parse_args()
 
@@ -162,14 +162,7 @@ def train(args):
     ])
 
     train_transform = transforms.Compose([
-    # 1. 随机水平翻转 (你已经有了)
     transforms.RandomHorizontalFlip(p=0.5),
-    
-    # 2. [新增] 随机裁剪 (带填充)
-    # 先把 32x32 的图填充 4 个像素变成 40x40，然后随机切出 32x32
-    # 这让模型不再死记硬背像素位置
-    # transforms.RandomCrop(32, padding=4),
-    
     transforms.ToTensor(),
     
     # 3. 归一化 (保持不变)
@@ -177,20 +170,12 @@ def train(args):
 ])
     
     train_dataset = datasets.CIFAR10(root=args.data_dir, train=True, download=True, transform=train_transform)
-    val_dataset = datasets.CIFAR10(root=args.data_dir, train=True, download=True, transform=transform)
+    val_dataset = datasets.CIFAR10(root=args.data_dir, train=False, download=True, transform=transform)
     
     train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=4, pin_memory=True)
     val_loader = DataLoader(val_dataset, batch_size=args.batch_size, shuffle=False, num_workers=4)
 
-    # 初始化改进后的 VampVAE
-    # model = VampVAE(
-    #     in_channels=3,
-    #     latent_dim=args.latent_dim,
-    #     num_components=args.num_components,
-    #     img_size=args.img_size,
-    #     hidden_dims=[64, 128, 256, 512], # ResNet 结构可以更深
-    #     device=device
-    # ).to(device)
+    
     model = CrossFlowVampVAE(
         in_channels=3,
         latent_dim=args.latent_dim,
@@ -202,10 +187,9 @@ def train(args):
         flow_heads=4,
         device=device
     ).to(device)
-    model.init_pseudo_inputs(train_loader)
+
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.epochs)
-    #scaler = torch.amp.GradScaler()
 
     # History 记录
     history = {
@@ -286,9 +270,6 @@ def train(args):
         avg_lpips = epoch_lpips / len(train_loader)
         avg_kld_opt = epoch_kld_opt / len(train_loader)
         avg_kld_raw = epoch_kld_raw / len(train_loader)
-        
-        # ... (Scheduler step, Val loss, FID 计算等代码) ...
-
         
         
         # 打印 Epoch 总结
