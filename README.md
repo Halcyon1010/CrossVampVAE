@@ -143,7 +143,7 @@ python comparison.py \
 
 主要流程如下：
 
-1. **Encoder**: 将图像$x$映射到 $\mu$ 和 $\log \sigma$ 。
+1. **Encoder**: 将图像 $x$ 映射到 $\mu$ 和 $\log \sigma$ 。
 2. **Reparameterization**: 采样得到 $z_0$。
 3. **Flow (`BiCrossAttnFlow`)**:
 * 若 `flow_length > 0`，将  通过一系列可逆的双向交叉注意力耦合层转换为 $z_K$。
@@ -153,7 +153,7 @@ python comparison.py \
 4. **Decoder**: 将 $z_K$ 解码为重构图像 。
 5. **Loss**:
 * **Reconstruction**: L1 Loss + LPIPS Loss。
-* **KL Divergence**: 计算 $q(z_K|x)$ 与 VampPrior $p_{vamp}(z_K)$ 之间的 KL 散度。由于引入了流模型，后验概率 $q(z_K|x)$ 通过变量代换公式计算：$\log q(z_K|x) = \log q(z_0|x) - \log \left| \det \frac{\partial z_K}{\partial z_0} \right|$ 。
+* **KL Divergence**: 计算 $q(z_K|x)$ 与 VampPrior $p_{vamp}(z_K)$ 之间的 KL 散度。由于引入了流模型，后验概率 $q(z_K|x)$ 通过变量代换公式计算：$ \log q(z_K|x) = \log q(z_0|x) - \log \left| \det \frac{\partial z_K}{\partial z_0} \right| $ 。
 
 
 ## 📊 结果示例
