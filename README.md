@@ -154,9 +154,9 @@ python comparison.py \
 5. **Loss**:
 * **Reconstruction**: L1 Loss + LPIPS Loss。
 * **KL Divergence**: 计算 $q(z_K|x)$ 与 VampPrior $p_{vamp}(z_K)$ 之间的 KL 散度。由于引入了流模型，后验概率 $q(z_K|x)$ 通过变量代换公式计算：
-* 
-* $$ \log q(z_K|x) = \log q(z_0|x) - \log \left| \det \frac{\partial z_K}{\partial z_0} \right| $$
-* 
+ 
+ $$ \log q(z_K|x) = \log q(z_0|x) - \log \left| \det \frac{\partial z_K}{\partial z_0} \right| $$
+
 
 
 ## 📊 结果示例
